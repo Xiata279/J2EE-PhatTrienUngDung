@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Them sach moi</title>
+</head>
+<body>
+    <h1>Them sach moi</h1>
+    
+    <form action="/books/add" method="post" th:object="${book}">
+        <label for="title">Tieu de:</label>
+        <input type="text" id="title" th:field="*{title}" required />
+        <br />
+        
+        <label for="author">Tac gia:</label>
+        <input type="text" id="author" th:field="*{author}" required />
+        <br />
+        
+        <button type="submit">Them</button>
+    </form>
+    
+    <br />
+    <a th:href="@{/books}">Quay lai</a>
+</body>
+</html>
