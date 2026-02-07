@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title>Sửa sản phẩm</title>
+</head>
+
+<body>
+    <div layout:fragment="content" class="container body-content">
+        <h2>Sửa thông tin sản phẩm</h2>
+
+        <form action="/products/edit" method="post" th:object="${product}" enctype="multipart/form-data">
+            <input type="hidden" th:field="*{id}" />
+            <div class="mb-3">
+                <label for="name" class="form-label">Tên sản phẩm</label>
+                <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="Nhập tên sản phẩm" />
+                <div th:if="${#fields.hasErrors('name')}" class="alert alert-warning" th:errors="*{name}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="price" class="form-label">Giá</label>
+                <input type="number" id="price" th:field="*{price}" class="form-control"
+                    placeholder="Nhập giá sản phẩm" />
+                <div th:if="${#fields.hasErrors('price')}" class="alert alert-warning" th:errors="*{price}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="image" class="form-label">Hình ảnh</label>
+                <input type="file" name="imageProduct" class="form-control" id="image" accept="image/*">
+                <div th:if="*{image != null}" style="margin-top: 10px;">
+                    <p>Hình ảnh hiện tại:</p>
+                    <img th:src="@{'/images/' + *{image}}" height="100" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="category" class="form-label">Danh mục</label>
+                <select id="category" th:field="*{category}" class="form-control">
+                    <option th:each="cat : ${categories}" th:value="${cat.name}" th:text="${cat.name}"></option>
+                </select>
+                <div th:if="${#fields.hasErrors('category')}" class="alert alert-warning" th:errors="*{category}"></div>
+            </div>
+
+            <button type="submit" class="btn btn-success">Cập nhật</button>
+            <a th:href="@{/products}" class="btn btn-secondary">Hủy</a>
+        </form>
+    </div>
+</body>
+
+</html>

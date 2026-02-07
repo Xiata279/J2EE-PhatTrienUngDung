@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title>Danh sách sản phẩm</title>
+</head>
+
+<body>
+    <div layout:fragment="content" class="container body-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0; border: none;">Danh sách sản phẩm</h2>
+            <a th:href="@{/products/create}" class="btn btn-primary">Thêm sản phẩm mới</a>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Tên sản phẩm</th>
+                    <th scope="col">Giá</th>
+                    <th scope="col">Hình ảnh</th>
+                    <th scope="col">Danh mục</th>
+                    <th scope="col">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="product : ${listproduct}">
+                    <th scope="row" th:text="${product.id}"></th>
+                    <td th:text="${product.name}"></td>
+                    <td th:text="${product.price}"></td>
+                    <td>
+                        <img th:if="${product.image != null}" th:src="@{'/images/' + ${product.image}}" height="120"
+                            width="150" alt="Product Image">
+                    </td>
+                    <td th:text="${product.category}"></td>
+                    <td>
+                        <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-secondary">Sửa</a>
+                        <a th:href="@{/products/delete/{id}(id=${product.id})}" class="btn btn-danger"
+                            onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
