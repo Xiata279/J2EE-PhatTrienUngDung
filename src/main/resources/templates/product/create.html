@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm sản phẩm</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <div>
+            <h4 class="fw-bold text-dark mb-1">Thêm sản phẩm mới</h4>
+            <p class="text-muted mb-0">Điền đầy đủ thông tin bên dưới để thêm sản phẩm</p>
+        </div>
+        <a th:href="@{/products}" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-plus-circle me-2"></i>Thông tin sản phẩm
+                </div>
+                <div class="card-body p-4">
+                    <form th:action="@{/products/create}" th:object="${product}" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Tên sản phẩm <span class="text-danger">*</span></label>
+                            <input class="form-control" type="text" th:field="*{name}" placeholder="Nhập tên sản phẩm..."/>
+                            <div class="text-danger mt-1" style="font-size:0.82rem;" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Giá (VNĐ) <span class="text-danger">*</span></label>
+                            <input class="form-control" type="text" id="price" name="price" placeholder="Nhập giá sản phẩm..." oninput="formatPrice(this)"/>
+                            <div class="text-danger mt-1" style="font-size:0.82rem;" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Danh mục <span class="text-danger">*</span></label>
+                            <select name="category.id" class="form-select">
+                                <option value="">-- Chọn danh mục --</option>
+                                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Hình ảnh sản phẩm</label>
+                            <input class="form-control" type="file" id="image" name="imageProduct" accept="image/png,image/jpeg,image/jpg" onchange="previewImage(event)"/>
+                            <div class="text-danger mt-1" style="font-size:0.82rem;" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></div>
+                            <div class="mt-2" id="previewBox" style="display:none;">
+                                <img id="preview" src="#" alt="Xem trước" style="max-width:160px;max-height:160px;object-fit:cover;border-radius:8px;border:1px solid #dee2e6;"/>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-save me-1"></i> Lưu sản phẩm
+                            </button>
+                            <a th:href="@{/products}" class="btn btn-outline-secondary px-4">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    function previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('preview');
+        const box = document.getElementById('previewBox');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => { preview.src = e.target.result; box.style.display = 'block'; };
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            box.style.display = 'none';
+        }
+    }
+    function formatPrice(input) {
+        let value = input.value.replace(/,/g, '');
+        if (!isNaN(value) && value.length > 0) {
+            input.value = Number(value).toLocaleString('en-US');
+        } else {
+            input.value = value.replace(/[^0-9]/g, '');
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('form').addEventListener('submit', function () {
+            const p = document.getElementById('price');
+            p.value = p.value.replace(/,/g, '');
+        });
+    });
+</script>
+</html>
