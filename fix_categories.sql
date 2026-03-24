@@ -1,0 +1,14 @@
+ALTER DATABASE sanpham_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE categories CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE products CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+UPDATE categories SET name='Điện thoại' WHERE id=1;
+UPDATE categories SET name='Laptop' WHERE id=2;
+UPDATE categories SET name='Phụ kiện' WHERE id=3;
+UPDATE products SET image='iphone15.png' WHERE id=1;
+UPDATE products SET image='samsung_s24.png' WHERE id=2;
+UPDATE products SET image='macbook_air.png' WHERE id=3;
+UPDATE products SET image='dell_xps.png' WHERE id=4;
+UPDATE products SET image='airpods.png' WHERE id=5;
+UPDATE products SET image='charger65w.png' WHERE id=6;
+UPDATE products SET image='ipad_air.png' WHERE id=7;
+UPDATE products SET image='asus_rog.png' WHERE id=8;

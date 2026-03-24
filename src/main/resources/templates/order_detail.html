@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{_layout}">
+<head><title>Chi tiết đơn hàng</title></head>
+<body>
+<div layout:fragment="content">
+    <div class="mb-4 d-flex align-items-center justify-content-between">
+        <div>
+            <h4 class="fw-bold mb-1" style="color:#0f172a;">Chi tiết đơn hàng <span th:text="'#' + ${order.id}"></span></h4>
+            <p class="text-muted mb-0" th:text="'Ngày đặt: ' + ${#dates.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></p>
+        </div>
+        <a th:href="@{/cart/orders}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4 mb-md-0">
+            <div class="card p-3 shadow-sm h-100">
+                <h5 class="fw-bold border-bottom pb-2 mb-3">Thông tin nhận hàng</h5>
+                <p class="mb-2"><strong>Người nhận:</strong> <span th:text="${order.customerName}"></span></p>
+                <p class="mb-2"><strong>Số điện thoại:</strong> <span th:text="${order.phone}"></span></p>
+                <p class="mb-2"><strong>Địa chỉ:</strong> <span th:text="${order.address}"></span></p>
+                <p class="mb-0">
+                    <strong>Trạng thái:</strong> 
+                    <span class="badge ms-1"
+                          th:classappend="${order.status == 'Chờ xác nhận'} ? 'bg-warning text-dark' : (${order.status == 'Đã hủy'} ? 'bg-secondary' : 'bg-success')"
+                          th:text="${order.status}"></span>
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card p-3 shadow-sm">
+                <h5 class="fw-bold border-bottom pb-2 mb-3">Sản phẩm đã đặt</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Hình ảnh</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Đơn giá</th>
+                                <th>Số lượng</th>
+                                <th>Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="detail : ${order.orderDetails}">
+                                <td style="width: 80px;">
+                                    <div style="width: 60px; height: 60px; background: #f8fafc; border-radius: 8px; overflow: hidden;" class="mx-auto d-flex align-items-center justify-content-center">
+                                        <img th:if="${detail.product != null and detail.product.image != null and !detail.product.image.isEmpty()}"
+                                             th:src="@{'/images/' + ${detail.product.image}}"
+                                             style="width: 100%; height: 100%; object-fit: cover;" alt=""/>
+                                        <i th:unless="${detail.product != null and detail.product.image != null and !detail.product.image.isEmpty()}"
+                                           class="fas fa-box" style="color:#cbd5e1;"></i>
+                                    </div>
+                                </td>
+                                <td class="text-start fw-medium" th:text="${detail.product != null ? detail.product.name : 'Sản phẩm không còn tồn tại'}"></td>
+                                <td th:text="${#numbers.formatInteger(detail.price, 0, 'COMMA')} + ' đ'"></td>
+                                <td th:text="${detail.quantity}"></td>
+                                <td class="fw-semibold text-danger" th:text="${#numbers.formatInteger(detail.price * detail.quantity, 0, 'COMMA')} + ' đ'"></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" class="text-end fw-bold">Tổng cộng:</td>
+                                <td class="fw-bold text-danger fs-5" th:text="${#numbers.formatInteger(order.totalAmount, 0, 'COMMA')} + ' đ'"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

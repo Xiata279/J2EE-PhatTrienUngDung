@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{_admin_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý danh mục</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <div>
+            <h4 class="fw-bold text-dark mb-1">Quản lý danh mục</h4>
+            <p class="text-muted mb-0">Thêm, sửa, xóa danh mục sản phẩm</p>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <!-- Form thêm / sửa -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-tag me-2"></i>
+                    <span th:text="${editMode} ? 'Cập nhật danh mục' : 'Thêm danh mục mới'">Thêm danh mục mới</span>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{${editMode} ? '/admin/categories/edit' : '/admin/categories/add'}" th:object="${category}" method="post">
+                        <input type="hidden" th:field="*{id}"/>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Tên danh mục <span class="text-danger">*</span></label>
+                            <input type="text" th:field="*{name}" class="form-control" placeholder="Nhập tên danh mục..."/>
+                            <div class="text-danger mt-1" style="font-size:0.82rem;" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary btn-sm px-3"
+                                    th:text="${editMode} ? 'Cập nhật' : 'Thêm mới'">
+                            </button>
+                            <a th:if="${editMode}" th:href="@{/admin/categories}" class="btn btn-outline-secondary btn-sm px-3">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Danh sách -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <i class="fas fa-list me-2 text-primary"></i>
+                    <span class="fw-semibold">Danh sách danh mục</span>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th style="width:60px;" class="ps-3">#</th>
+                                <th>Tên danh mục</th>
+                                <th style="width:140px;" class="text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(categories)}">
+                                <td colspan="3" class="text-center text-muted py-4">Chưa có danh mục nào.</td>
+                            </tr>
+                            <tr th:each="cat, stat : ${categories}">
+                                <td class="ps-3 text-muted" th:text="${stat.count}"></td>
+                                <td th:text="${cat.name}"></td>
+                                <td class="text-center">
+                                    <a th:href="@{'/admin/categories/edit/' + ${cat.id}}" class="btn btn-outline-primary btn-sm me-1">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a th:href="@{'/admin/categories/delete/' + ${cat.id}}" class="btn btn-outline-danger btn-sm"
+                                       onclick="return confirm('Xóa danh mục này? Sản phẩm thuộc danh mục sẽ không còn danh mục.')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
